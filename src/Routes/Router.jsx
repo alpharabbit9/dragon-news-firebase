@@ -4,6 +4,8 @@ import CategoryNews from '../Pages/CategoryNews';
 import AuthLayout from '../Layouts/AuthLayout';
 import Login from '../Components/Login';
 import Register from '../Components/Register';
+import NewDetails from '../Pages/NewDetails';
+import PrivateRoute from './PrivateRoute';
 
 const Router = createBrowserRouter([
     {
@@ -30,8 +32,20 @@ const Router = createBrowserRouter([
         ]
     },
     {
-        path: '/news',
-        element: <h1>News</h1>
+        path: '/news/:id',
+        element: <PrivateRoute>
+            <NewDetails></NewDetails>
+        </PrivateRoute>,
+        loader: async ({ params }) => {
+            const response = await fetch(
+                `https://openapi.programming-hero.com/api/news/${params.id}`
+            );
+            if (!response.ok) {
+                throw new Error('Failed to load data');
+            }
+            return response.json();
+        }
+        
     },
     {
         path: '/auth',

@@ -1,24 +1,60 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../Provider/AuthProvider';
+
+
 
 const Login = () => {
+
+    const {userLogin,setUser} = useContext(AuthContext);
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const HandleLogin = (e) =>{
+
+        
+
+        e.preventDefault();
+
+        
+        const email = e.target.email.value ; 
+        const password = e.target.password.value ;
+
+        console.log(email,password);
+
+        userLogin(email,password)
+        .then(res =>{
+           const user = res.user ;
+            setUser(user)
+            navigate(location?.state ? location.state : '/')
+        })
+        .catch(error => {
+            alert(error.message)
+        })
+
+
+
+    }
     return (
         <div className='min-h-screen flex justify-center items-center'>
             <div className="card bg-base-100 w-full max-w-lg shrink-0 rounded-none p-10">
                 <h2 className='text-2xl font-semibold text-center py-3'>Log in your account</h2>
                 <hr className='mt-3' />
-                <form className="card-body">
+                <form onSubmit={HandleLogin} className="card-body">
                     <div className="form-control">
                         <label className="label">
                             <span className="label-text">Email</span>
                         </label>
-                        <input type="email" placeholder="email" className="input input-bordered" required />
+                        <input
+                        name='email'
+                        type="email" placeholder="email" className="input input-bordered" required />
                     </div>
                     <div className="form-control">
                         <label className="label">
                             <span className="label-text">Password</span>
                         </label>
-                        <input type="password" placeholder="password" className="input input-bordered" required />
+                        <input
+                        name='password' type="password" placeholder="password" className="input input-bordered" required />
                         <label className="label">
                             <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
                         </label>
